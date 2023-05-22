@@ -10,11 +10,25 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.2.25"
+    "codemirror": "^6.0.1",
+    "element-plus": "^2.3.5",
+    "file-saver": "^2.0.5",
+    "geojson-rewind": "^0.3.1",
+    "geojsonhint": "^2.0.0",
+    "leaflet": "^1.9.4",
+    "leaflet-distortableimage": "^0.21.9",
+    "leaflet-draw": "^1.0.4",
+    "leaflet-hash": "^0.2.1",
+    "leaflet-modal": "^0.2.0",
+    "vue": "^3.2.25",
+    "vue-codemirror": "^6.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-typescript": "^11.0.0",
+    "@types/file-saver": "^2.0.5",
+    "@types/leaflet": "^1.9.3",
     "@vitejs/plugin-vue": "^2.0.0",
+    "sass": "^1.62.1",
     "tslib": "^2.5.0",
     "typescript": "^4.5.4",
     "vite": "^2.8.0",

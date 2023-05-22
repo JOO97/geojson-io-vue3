@@ -1,0 +1,21 @@
+.leaflet-touch {
+	.leaflet-draw-toolbar {
+		.leaflet-draw-edit-split {
+			position: relative;
+			background-image: unset;
+			background-repeat: unset;
+			background-size: unset;
+			background-clip: unset;
+			&::after {
+				font-family: element-icons !important;
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				font-size: 15px;
+				transform: translate(-50%, -50%);
+				font-weight: 600;
+			}
+		}
+	}
+}

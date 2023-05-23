@@ -1,5 +1,19 @@
 import 'element-plus/es/components/message/style/css';
-import { ElMessage, ElMessageBox, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from 'element-plus';
+import {
+	ElMessage,
+	ElMessageBox,
+	ElTabPane,
+	ElCol,
+	ElTabs,
+	ElRow,
+	ElTooltip,
+	ElDropdown,
+	ElDropdownItem,
+	ElUpload,
+	ElButton,
+	ElDialog,
+	ElAlert,
+} from 'element-plus';
 
 function MessageBox(message: string, title: string, type = 'warning') {
 	return ElMessageBox.confirm(message, title, {
@@ -9,4 +23,18 @@ function MessageBox(message: string, title: string, type = 'warning') {
 	});
 }
 
-export { ElMessage as Message, MessageBox, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip };
+export {
+	ElMessage as Message,
+	MessageBox,
+	ElTabPane,
+	ElCol,
+	ElTabs,
+	ElRow,
+	ElTooltip,
+	ElDropdown,
+	ElDropdownItem,
+	ElUpload,
+	ElButton,
+	ElDialog,
+	ElAlert,
+};

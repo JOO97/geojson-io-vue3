@@ -2,21 +2,19 @@
  * @Author: zhangjm
  * @Date: 2023-05-22 17:13:10
  * @LastEditors: zhangjm
- * @LastEditTime: 2023-05-22 17:13:21
- * @ScreenCode: 0
- * @ScreenName: xx大屏
- * @OriginUrl: http://datav.aliyun.com/admin/screen/0
- * @Description: 
+ * @LastEditTime: 2023-05-23 11:03:08
+ * @Description:
  */
+
 /**
  * @description 注册controls
  */
-import Image from './distortable-image';
+import Image from './DistortableImage';
 import registerSplitToolbar from './split/SplitToolbar';
 
-const controls = { Image };
+const controls: { [key: string]: any } = { Image };
 
-export default (L) => {
+export default (L: any) => {
 	registerSplitToolbar(L);
 	// 参数校验
 	if (

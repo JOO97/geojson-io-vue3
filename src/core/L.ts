@@ -4,9 +4,9 @@ import 'leaflet-hash';
 import 'leaflet-modal';
 import 'leaflet-distortableimage/dist/vendor';
 import 'leaflet-distortableimage';
+import 'leaflet-contextmenu';
 
 import 'leaflet/dist/leaflet.css';
-
 //leaflet plugins
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-draw/dist/leaflet.draw-src.css';
@@ -16,15 +16,14 @@ import 'leaflet-modal/dist/leaflet.modal.min.css';
 import 'leaflet-distortableimage/dist/leaflet.distortableimage.css';
 import 'leaflet-distortableimage/dist/vendor.css';
 
-import 'leaflet-contextmenu';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
 
 //marker icon
 import icon from 'leaflet/dist/images/marker-icon.png';
 // import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 
-import './style/toolbar.css';
-import drawLocal from '../config/local';
+import '@/assets/toolbar.scss';
+import drawLocal from '@/config/local';
 
 import controlRegister from './controls';
 
@@ -68,19 +67,19 @@ controlRegister(L);
 newL.CONSTANT = {
 	precision: 6,
 };
-const radio = 25 / 41;
-const size = 20;
+const RADIO = 25 / 41;
+const SIZE = 20;
 
 //解决默认图标加载失败的问题
 let DefaultIcon = newL.icon({
 	iconUrl: icon,
 	// shadowUrl: iconShadow,
 	// iconRetinaUrl: icon,
-	iconSize: [size * radio, size],
-	iconAnchor: [(size * 12) / size, size],
+	iconSize: [SIZE * RADIO, SIZE],
+	iconAnchor: [(SIZE * 12) / SIZE, SIZE],
 	popupAnchor: [1, -34],
 	tooltipAnchor: [16, -28],
-	// shadowSize: [size, size]
+	// shadowSize: [SIZE, SIZE]
 });
 newL.Marker.prototype.options.icon = DefaultIcon;
 newL.Draw.Marker.prototype.options.icon = DefaultIcon;
@@ -170,28 +169,32 @@ newL.Draw.Image.include({
 			OK_CLS: 'modal-ok',
 			CANCEL_CLS: 'modal-cancel',
 			width: 300,
-			onShow: function (evt) {
+			onShow: function (evt: any) {
 				let modal = evt.modal;
-				let imported: null | string = null;
+				let imported: any = null;
 
-				newL.DomEvent.on(modal._container.querySelector('#file-input'), 'change', function (e) {
-					let file = e.target.files[0];
-					if (!file) {
-						return;
-					}
-					let reader = new FileReader();
-					reader.onload = function (e) {
-						imported = e.target.result;
-						//创建图片对象，获取图片尺寸信息
-						const imgEl = new Image();
-						imgEl.src = imported;
-						imgEl.onload = () => {
-							drawsvg._scale = 100 / imgEl.width;
-							drawsvg._ratio = imgEl.width / imgEl.height;
+				newL.DomEvent.on(
+					modal._container.querySelector('#file-input'),
+					'change',
+					function (e: MouseEvent) {
+						let file = (e.target as typeof e.target & { files: Blob[] }).files[0] as Blob;
+						if (!file) {
+							return;
+						}
+						let reader = new FileReader();
+						reader.onload = function (e) {
+							imported = e.target?.result;
+							//创建图片对象，获取图片尺寸信息
+							const imgEl = new Image();
+							imgEl.src = imported;
+							imgEl.onload = () => {
+								drawsvg._scale = 100 / imgEl.width;
+								drawsvg._ratio = imgEl.width / imgEl.height;
+							};
 						};
-					};
-					reader.readAsDataURL(file);
-				})
+						reader.readAsDataURL(file);
+					}
+				)
 					.on(modal._container.querySelector('.modal-ok'), 'click', () => {
 						if (imported != null) {
 							drawsvg._svgViewBox = 'calculate';

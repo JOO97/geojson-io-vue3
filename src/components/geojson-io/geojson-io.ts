@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { ref, computed, getCurrentInstance } from 'vue';
 import type { ExtractPropTypes, PropType, ShallowRef } from 'vue';
 import type GeojsonIo from './geojson-io.vue';
 
@@ -33,4 +33,22 @@ export const geojsonIoProps = {
 	},
 };
 
-export type TGeojsonIoInstance = InstanceType<typeof GeojsonIo>;
+export const useModel = (props: geojsonIoProps) => {
+	const selfModel = ref<any>(defaultData);
+	const { emit } = getCurrentInstance()!;
+	const model = computed({
+		get() {
+			return props.modelValue ?? selfModel.value;
+		},
+		set(val: unknown) {
+			emit(EVENTS.UPDATE, val);
+			selfModel.value = val;
+		},
+	});
+	return {
+		model,
+	};
+};
+
+export type geojsonIoProps = ExtractPropTypes<typeof geojsonIoProps>;
+export type geojsonIoInstance = InstanceType<typeof GeojsonIo>;

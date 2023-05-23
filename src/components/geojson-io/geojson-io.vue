@@ -89,7 +89,7 @@ import Editor from '@/components/editor.vue';
 import FileBar from '@/components/file-bar.vue';
 import { MessageBox, Message, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from '@/components/el';
 
-import { geojsonIoProps, defaultData, EVENTS } from './geojson-io';
+import { geojsonIoProps, defaultData, EVENTS, useModel } from './geojson-io';
 import useEditor from './hooks/useEditor';
 
 const props = defineProps(geojsonIoProps);
@@ -97,6 +97,8 @@ const $emit = defineEmits([EVENTS.UPDATE]);
 
 const geojson = ref(defaultData);
 const mapRef = ref<typeof Map>();
+
+const { model } = useModel(props);
 
 // 编辑器hook
 const {

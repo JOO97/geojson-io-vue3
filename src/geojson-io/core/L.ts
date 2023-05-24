@@ -22,8 +22,7 @@ import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 // import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 
-import '@/assets/toolbar.scss';
-import drawLocal from '@/config/local';
+import drawLocal from '../local';
 
 import controlRegister from './controls';
 

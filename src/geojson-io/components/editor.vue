@@ -45,7 +45,7 @@ import { oneDark } from '@codemirror/theme-one-dark';
 // import '@codemirror/addon/search/search.js';
 
 import { ElAlert } from './el';
-import validate from '@/utils/editor-validate'; //校验
+import validate from '../utils/editor-validate'; //校验
 
 const defaultData = `{
     "type": "FeatureCollection",

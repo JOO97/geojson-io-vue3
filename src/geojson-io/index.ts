@@ -6,10 +6,13 @@
  * @Description:
  */
 
+import GeojsonIO from './geojson-io.vue';
+// import type { App } from 'vue';
+
+export default GeojsonIO;
+
 // import { createApp } from 'vue';
 // import App from './App.vue';
+// // import GeojsonIO from './index.vue';
 
 // createApp(App).mount('#app');
-
-import GeojsonIO from './geojson-io';
-export default GeojsonIO;

@@ -7,7 +7,7 @@
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 //校验geojson
 import geojsonRewind from 'geojson-rewind';
-import L from '@/core/L';
+import L from '../core/L';
 import { Message } from './el';
 
 interface IDynamicObj {
@@ -68,7 +68,7 @@ watch(
  * 初始化地图
  */
 const init = () => {
-	const map = new L.Map(mapRef.value, {
+	const mapIns = new L.Map(mapRef.value, {
 		center: [24.46, 118.1],
 		zoom: 13,
 		maxZoom: 20,
@@ -78,27 +78,27 @@ const init = () => {
 
 	//当前选择的位置经纬度添加到hash中
 	//非electron环境下 使用hash
-	if (!(window && (window as typeof window & { process: string }).process)) L.hash(map);
+	if (!(window && (window as typeof window & { process: string }).process)) L.hash(mapIns);
 
-	map.value = map;
-	mapLayer.value = L.featureGroup().addTo(map);
-	L.control.scale().setPosition('bottomright').addTo(map);
+	map.value = mapIns;
+	mapLayer.value = L.featureGroup().addTo(mapIns);
+	L.control.scale().setPosition('bottomright').addTo(mapIns);
 
 	L.control
 		.layers(
 			{
-				// google: GOOGLE_MAP.addTo(map),
-				// 高德: A_MAP.addTo(map)
+				// google: GOOGLE_MAP.addTo(mapIns),
+				// 高德: A_MAP.addTo(mapIns)
 			},
 			{ 显示绘制元素: mapLayer.value },
 			{ position: 'bottomleft', collapsed: false }
 		)
-		.addTo(map);
-	A_MAP.addTo(map);
+		.addTo(mapIns);
+	A_MAP.addTo(mapIns);
 	//数据映射
 	handleUserGeojson();
 	//添加控制
-	map.addControl(
+	mapIns.addControl(
 		new L.Control.Draw({
 			edit: {
 				featureGroup: mapLayer.value,
@@ -113,28 +113,28 @@ const init = () => {
 		})
 	);
 	// 地图-事件监听
-	map.on('draw:created', created);
-	map.on('draw:edited', update).on('draw:deleted', update);
-	map.on('draw:drawstart', (options: any) => {
+	mapIns.on('draw:created', created);
+	mapIns.on('draw:edited', update).on('draw:deleted', update);
+	mapIns.on('draw:drawstart', (options: any) => {
 		// 图片控件
 		if (options.layerType === 'image') {
 			return;
 		}
 	});
-	map.on('popupopen', (e: any) => {
+	mapIns.on('popupopen', (e: any) => {
 		handlePopupOpen(e);
 	});
-	map.on('draw:splittingstart', () => {
+	mapIns.on('draw:splittingstart', () => {
 		mode = 'splitting';
 	});
-	map.on('draw:splittingfinished', () => {
+	mapIns.on('draw:splittingfinished', () => {
 		mode = 'default';
 	});
 	//右键点击线元素上的编辑点时触发
-	map.on(L.Draw.Event.SPLIT, (payload: any) => {
+	mapIns.on(L.Draw.Event.SPLIT, (payload: any) => {
 		splitPolyline(payload);
 	});
-	map.on(L.Draw.Event.PolylineMarkerRemove, (payload: any) => {
+	mapIns.on(L.Draw.Event.PolylineMarkerRemove, (payload: any) => {
 		removeMarkerOfPolyline(payload);
 	});
 };
@@ -344,6 +344,7 @@ function invalidateSize() {
  * 拆分polyline
  */
 function splitPolyline(e: any) {
+	console.log('----------e', e);
 	const {
 		poly: { feature, customIndex },
 		items: [coordinates1, coordinates2],
@@ -400,6 +401,20 @@ function removeMarkerOfPolyline(poly: any) {
 	$emit('update', newData);
 }
 
+/**
+ * 定位 [lat, lng] | [[lat, lng]]
+ */
+const flyTo = (position: number[] | number[][], zoom: 18) => {
+	if (!position || !position.length) return;
+	if (position instanceof Array) {
+		if (position[0] instanceof Array) {
+			map.value.flyToBounds(position, {
+				maxZoom: zoom,
+			});
+		} else map.value.flyTo(position, zoom);
+	}
+};
+
 onMounted(() => init());
 
 onBeforeUnmount(() => {
@@ -410,6 +425,7 @@ onBeforeUnmount(() => {
 
 defineExpose({
 	invalidateSize,
+	flyTo,
 });
 </script>
 
@@ -483,6 +499,28 @@ defineExpose({
 			width: 100%;
 			background: transparent;
 			border: none;
+		}
+	}
+}
+
+.leaflet-touch {
+	.leaflet-draw-toolbar {
+		.leaflet-draw-edit-split {
+			position: relative;
+			background-image: unset;
+			background-repeat: unset;
+			background-size: unset;
+			background-clip: unset;
+			&::after {
+				font-family: element-icons !important;
+				content: '';
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				font-size: 15px;
+				transform: translate(-50%, -50%);
+				font-weight: 600;
+			}
 		}
 	}
 }

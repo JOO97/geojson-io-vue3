@@ -1,6 +1,7 @@
 import { ref, computed, getCurrentInstance } from 'vue';
-import type { ExtractPropTypes, PropType, ShallowRef } from 'vue';
+import type { ExtractPropTypes, PropType } from 'vue';
 import type GeojsonIo from './geojson-io.vue';
+import type Map from './components/map.vue';
 
 const definePropType = <T>(val: any): PropType<T> => val;
 
@@ -33,6 +34,11 @@ export const geojsonIoProps = {
 	},
 };
 
+/**
+ * model hook
+ * @param props
+ * @returns
+ */
 export const useModel = (props: geojsonIoProps) => {
 	const selfModel = ref<any>(defaultData);
 	const { emit } = getCurrentInstance()!;
@@ -48,6 +54,26 @@ export const useModel = (props: geojsonIoProps) => {
 	return {
 		model,
 	};
+};
+
+/**
+ * map hook
+ * @param props
+ * @returns
+ */
+export const useMap = (props: geojsonIoProps, { model }: Partial<ReturnType<typeof useModel>>) => {
+	const mapRef = ref<typeof Map | null>(null);
+
+	/**
+	 * 地图绘制元素数据更新
+	 * @param data
+	 */
+	const updateMapItems = (data: object) => {
+		console.log('updateMapItems', data);
+		model!.value = data ? JSON.stringify(data, null, 4) : '';
+	};
+
+	return { mapRef, updateMapItems };
 };
 
 export type geojsonIoProps = ExtractPropTypes<typeof geojsonIoProps>;

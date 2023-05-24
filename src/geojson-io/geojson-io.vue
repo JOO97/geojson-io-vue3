@@ -49,7 +49,7 @@
 					</el-tab-pane>
 					<el-tab-pane :padding="0" name="clear" disabled>
 						<span slot="label">
-							<el-button size="large" @click="handleResetData"
+							<el-button size="large" @click="clearEditor"
 								><i class="el-icon-refresh-left"
 							/></el-button>
 						</span>
@@ -63,7 +63,6 @@
 					:style="{ height }"
 					style="flex-grow: 1; overflow: auto"
 					:data="activeTab === 'json' ? geojson : errorGeojson"
-					@change="handleEditorChange"
 					class="editor"
 				/>
 			</div>
@@ -84,21 +83,21 @@ import { ref, computed } from 'vue';
 import { saveAs } from 'file-saver';
 import geojsonhint from 'geojsonhint';
 
-import Map from '@/components/map.vue';
-import Editor from '@/components/editor.vue';
-import FileBar from '@/components/file-bar.vue';
-import { MessageBox, Message, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from '@/components/el';
+import Map from './components/map.vue';
+import Editor from './components/editor.vue';
+import FileBar from './components/file-bar.vue';
+import { MessageBox, Message, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from './components/el';
 
-import { geojsonIoProps, defaultData, EVENTS, useModel } from './geojson-io';
+import { geojsonIoProps, defaultData, EVENTS, useModel, useMap } from './geojson-io';
 import useEditor from './hooks/useEditor';
 
 const props = defineProps(geojsonIoProps);
-const $emit = defineEmits([EVENTS.UPDATE]);
+defineEmits([EVENTS.UPDATE]);
 
 const geojson = ref(defaultData);
-const mapRef = ref<typeof Map>();
 
 const { model } = useModel(props);
+const { mapRef, updateMapItems } = useMap(props, { model });
 
 // 编辑器hook
 const {
@@ -107,9 +106,11 @@ const {
 	foldItemStyle,
 	activeTab,
 	errorGeojson,
-	handleEditorChange,
+	toggleFold,
 	removeErrorTab,
-} = useEditor(props, { geojson, mapRef });
+	clearEditor,
+	handleTabRemove,
+} = useEditor(props, { model, mapRef });
 
 /**
  * 地图面板span
@@ -118,15 +119,6 @@ const mapPanelSpan = computed(() => {
 	if (!props.editorView || fold.value) return 24;
 	return 16;
 });
-
-/**
- * 地图绘制元素更新
- * @param data
- */
-const updateMapItems = (data: object) => {
-	console.log('updateMapItems', data);
-	geojson.value = data ? JSON.stringify(data, null, 4) : '';
-};
 
 /**
  * 导入
@@ -155,27 +147,14 @@ const handleExport = () => {
 };
 
 /**
- * 重置当前数据
- */
-function handleResetData() {
-	editorRef.value && editorRef.value.reset();
-}
-
-/**
  * geojson校验
  */
-function validate(value: string) {
-	var err = geojsonhint.hint(value);
+const validate = (value: string) => {
+	const err = geojsonhint.hint(value);
 	if (err && err.length) return false;
 	return true;
-}
+};
 
-/**
- * 移除tab
- */
-function handleTabRemove(name: any) {
-	if (name === 'geojsonValidate') removeErrorTab();
-}
 /**
  * 获取编辑器错误状态
  */
@@ -213,6 +192,12 @@ const handleMergeBtnClick = () => {
 	removeErrorTab();
 	handleMerge(value);
 };
+
+const flyTo = (position: number | number[][], zoom: number) => mapRef.value?.flyTo(position, zoom);
+
+defineExpose({
+	flyTo,
+});
 </script>
 
 <style lang="scss" scoped>

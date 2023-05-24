@@ -1,9 +1,13 @@
 import { ref, computed } from 'vue';
-import type Editor from '@/components/editor.vue';
+import type Editor from '../components/editor.vue';
 
-import { geojsonIoProps } from '../geojson-io';
+import { useModel, useMap } from '../geojson-io';
+import type { geojsonIoProps } from '../geojson-io';
 
-export default (props: typeof geojsonIoProps, { geojson, mapRef }) => {
+export default (
+	props: geojsonIoProps,
+	{ model, mapRef }: Partial<ReturnType<typeof useMap>> & Partial<ReturnType<typeof useModel>>
+) => {
 	const editorRef = ref<typeof Editor | null>(null);
 
 	//当前tab
@@ -25,7 +29,7 @@ export default (props: typeof geojsonIoProps, { geojson, mapRef }) => {
 		fold.value = !fold.value;
 		//NOTE: 需要延迟
 		setTimeout(() => {
-			mapRef.value?.invalidateSize(true);
+			mapRef!.value?.invalidateSize(true);
 		}, 20);
 	};
 
@@ -34,7 +38,7 @@ export default (props: typeof geojsonIoProps, { geojson, mapRef }) => {
 	 * @param value
 	 */
 	const handleEditorChange = (value: string) => {
-		if (activeTab.value === 'json') geojson.value = value;
+		if (activeTab.value === 'json') model!.value = value;
 		else errorGeojson.value = value;
 	};
 
@@ -46,6 +50,20 @@ export default (props: typeof geojsonIoProps, { geojson, mapRef }) => {
 		activeTab.value = 'json';
 	};
 
+	/**
+	 * 清除编辑器数据
+	 */
+	const clearEditor = () => {
+		editorRef.value && editorRef.value.reset();
+	};
+
+	/**
+	 * 移除tab
+	 */
+	const handleTabRemove = (name: any) => {
+		if (name === 'geojsonValidate') removeErrorTab();
+	};
+
 	return {
 		editorRef,
 		fold,
@@ -55,5 +73,7 @@ export default (props: typeof geojsonIoProps, { geojson, mapRef }) => {
 		handleEditorChange,
 		toggleFold,
 		removeErrorTab,
+		clearEditor,
+		handleTabRemove,
 	};
 };

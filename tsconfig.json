@@ -11,11 +11,12 @@
 		"esModuleInterop": true,
 		"lib": ["esnext", "dom"],
 		"declaration": true,
-		"noEmit": true,
 		"baseUrl": ".",
 		"paths": {
 			"@/*": ["src/*"]
-		}
+		},
+		"skipLibCheck": true,
+		"typeRoots": ["./node_modules/@types/", "./typings"]
 	},
 	"include": ["src/**/*.ts", "src/**/*.vue", "typings/*.d.ts"],
 	"references": [{ "path": "./tsconfig.node.json" }]

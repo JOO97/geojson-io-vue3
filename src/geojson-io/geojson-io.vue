@@ -10,7 +10,7 @@
 	<el-row class="geojson-main" :style="{ height, width }">
 		<!-- 地图 -->
 		<el-col class="map-view" :span="mapPanelSpan">
-			<Map ref="mapRef" :style="{ height }" @update="updateMapItems" :data="geojson" />
+			<Map ref="mapRef" :style="{ height }" @update="updateMapItems" :data="model" />
 		</el-col>
 		<!-- 编辑器 -->
 		<el-col v-if="editorView" :span="8" :class="['editor-view', 'right', { fold }]">
@@ -62,7 +62,7 @@
 					ref="editorRef"
 					:style="{ height }"
 					style="flex-grow: 1; overflow: auto"
-					:data="activeTab === 'json' ? geojson : errorGeojson"
+					:data="activeTab === 'json' ? model : errorGeojson"
 					class="editor"
 				/>
 			</div>
@@ -83,7 +83,7 @@ import { ref, computed } from 'vue';
 import { saveAs } from 'file-saver';
 import geojsonhint from 'geojsonhint';
 
-import Map from './components/map.vue';
+import Map from './components/map/map.vue';
 import Editor from './components/editor.vue';
 import FileBar from './components/file-bar.vue';
 import { MessageBox, Message, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from './components/el';
@@ -93,8 +93,6 @@ import useEditor from './hooks/useEditor';
 
 const props = defineProps(geojsonIoProps);
 defineEmits([EVENTS.UPDATE]);
-
-const geojson = ref(defaultData);
 
 const { model } = useModel(props);
 const { mapRef, updateMapItems } = useMap(props, { model });
@@ -112,6 +110,7 @@ const {
 	handleTabRemove,
 } = useEditor(props, { model, mapRef });
 
+// console.log(props.modelValue, model.value);
 /**
  * 地图面板span
  */
@@ -140,7 +139,7 @@ const handleImport = (value: string) => {
  * 导出
  */
 const handleExport = () => {
-	var blob = new Blob([geojson.value], {
+	var blob = new Blob([model.value], {
 		type: 'text/plain;charset=utf-8',
 	});
 	saveAs(blob, `geojson.json`);
@@ -176,11 +175,11 @@ function handleMerge(value: any) {
 	try {
 		if (currentGeojson.features.length) {
 			currentGeojson.features.push(...valueFeatures);
-			geojson.value = JSON.stringify(currentGeojson);
-		} else geojson.value = value;
+			model.value = JSON.stringify(currentGeojson);
+		} else model.value = value;
 	} catch (error) {
 		console.log('error', error);
-		geojson.value = value;
+		model.value = value;
 	}
 }
 
@@ -194,9 +193,11 @@ const handleMergeBtnClick = () => {
 };
 
 const flyTo = (position: number | number[][], zoom: number) => mapRef.value?.flyTo(position, zoom);
+const openPopup = (index: number) => mapRef.value?.openPopup(index);
 
 defineExpose({
 	flyTo,
+	openPopup,
 });
 </script>
 

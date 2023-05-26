@@ -1,10 +1,3 @@
-<!--
- * @Author: zhangjm
- * @Date: 2023-05-23 11:09:27
- * @LastEditors: zhangjm
- * @LastEditTime: 2023-05-23 13:37:15
- * @Description: 
--->
 <template>
 	<div style="display: flex">
 		<GeojsonIo
@@ -15,13 +8,13 @@
 			style="flex-shrink: 0"
 		/>
 		<div>{{ value }}</div>
-		<button @click="test">123</button>
+		<button @click="test">test</button>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import GeojsonIo from '../dist/geojson-io/geojson-io.vue';
+import GeojsonIo from '../../src/main';
 
 const geojsonIoRef = ref<typeof GeojsonIo | null>(null);
 const value = ref(
@@ -81,10 +74,12 @@ const value = ref(
 			}
 		}
 	]
-}
-`
+}`
 );
+
+let index = 0;
 const test = () => {
+	// geojsonIoRef.value!.openPopup(index);
 	// geojsonIoRef.value!.flyTo([
 	// 	[118.105602, 24.5048],
 	// 	[118.162594, 24.488086],
@@ -93,5 +88,6 @@ const test = () => {
 	// 	[118.093929, 24.486524],
 	// 	[118.094616, 24.50152],
 	// ]);
+	value.value = `{"type":"FeatureCollection","features":[]}`;
 };
 </script>

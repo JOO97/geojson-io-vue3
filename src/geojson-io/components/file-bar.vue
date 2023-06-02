@@ -5,7 +5,9 @@
 			<span class="el-dropdown-link">
 				<i :class="sub.icon" />
 				{{ sub.name }}
-				<i class="el-icon-arrow-down el-icon--right"></i>
+				<el-icon class="el-icon--right">
+					<ArrowDown />
+				</el-icon>
 			</span>
 			<el-dropdown-menu slot="dropdown">
 				<el-dropdown-item
@@ -45,7 +47,7 @@
 
 <script lang="ts" setup>
 import { ref, watch } from 'vue';
-import { Message, ElDropdown, ElDropdownItem, ElUpload, ElButton, ElDialog } from './el';
+import { Message, ElDropdown, ElDropdownItem, ElUpload, ElButton, ElDialog, ArrowDown } from './el';
 
 const $emit = defineEmits(['export', 'import']);
 
@@ -183,11 +185,12 @@ const handleConfirmFileValue = () => {
 	top: 0;
 	right: 0;
 	z-index: 999;
-	width: max-content;
+	// width: max-content;
 	background-color: #f5f7fa;
 	border-bottom: 1px solid #e4e7ed;
 	height: 40px;
 	line-height: 40px;
+	font-size: 14px;
 	.el-dropdown {
 		color: #409eff;
 		cursor: pointer;

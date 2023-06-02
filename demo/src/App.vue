@@ -3,20 +3,26 @@
 		<GeojsonIo
 			ref="geojsonIoRef"
 			height="500px"
-			width="1000px"
-			v-model="value"
+			width="100%"
 			style="flex-shrink: 0"
+			v-model="value"
+			v-bind="config"
 		/>
-		<div>{{ value }}</div>
-		<button @click="test">test</button>
+		<!-- <div>{{ value }}</div>
+		<button @click="test">test</button> -->
 	</div>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 import GeojsonIo from '../../src/main';
 
 const geojsonIoRef = ref<typeof GeojsonIo | null>(null);
+
+const config = reactive({
+	fileBar: true,
+	editor: true,
+});
 const value = ref(
 	`{
 	"type": "FeatureCollection",
@@ -91,3 +97,10 @@ const test = () => {
 	value.value = `{"type":"FeatureCollection","features":[]}`;
 };
 </script>
+
+<style>
+* {
+	margin: 0;
+	padding: 0;
+}
+</style>

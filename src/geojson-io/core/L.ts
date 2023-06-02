@@ -1,23 +1,17 @@
 import L from 'leaflet';
 import './LeafletDraw'; //NOTE: 源码有bug, 改为本地引入
 import 'leaflet-hash';
-import 'leaflet-modal';
+import 'leaflet-modal/dist/L.Modal.min.js';
 import 'leaflet-distortableimage/dist/vendor';
 import 'leaflet-distortableimage';
-
-// import './controls/distortableimage/index.js';
-// import './controls/distortableimage/vendor.js';
-
-import 'leaflet-contextmenu';
+import 'leaflet-contextmenu/dist/leaflet.contextmenu.min.js';
 
 // leaflet style
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
-import 'leaflet-draw/dist/leaflet.draw-src.css';
 import 'leaflet-modal/dist/leaflet.modal.min.css';
 import 'leaflet-distortableimage/dist/leaflet.distortableimage.css';
-import 'leaflet-distortableimage/dist/vendor.css';
-import 'leaflet-contextmenu/dist/leaflet.contextmenu.css';
+import 'leaflet-contextmenu/dist/leaflet.contextmenu.min.css';
 
 //marker icon
 import icon from 'leaflet/dist/images/marker-icon.png';

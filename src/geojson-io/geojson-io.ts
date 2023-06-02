@@ -27,10 +27,15 @@ export const geojsonIoProps = {
 		type: String,
 		default: '500px',
 	},
-	// 是否使用编辑面板
-	editorView: {
+	// 是否显示编辑器
+	editor: {
 		type: Boolean,
 		default: false,
+	},
+	// 是否显示file bar
+	fileBar: {
+		type: Boolean,
+		default: true,
 	},
 };
 

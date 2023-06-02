@@ -1,18 +1,18 @@
 <template>
 	<!-- 地图容器 -->
-	<div ref="mapRef" class="mapView" />
+	<div ref="mapRef" class="map" />
 </template>
 
 <script lang="ts" setup>
 import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
-import { defaultsDeep, cloneDeep, random } from 'lodash-es';
-//校验geojson
-import geojsonRewind from 'geojson-rewind';
-import geojsonhint from 'geojsonhint';
-import { useLeaflet } from '../../core/L';
-import { Message } from './../el';
+import { defaultsDeep, cloneDeep } from 'lodash-es';
 
-import '../../assets/font/iconfont.css';
+import { geojsonValidate, geojsonRewind } from '@/utils/validate';
+import { createUuid } from '@/utils';
+import { useLeaflet } from '@/core/L';
+import { Message } from '@/components/el/index';
+
+import '@/assets/font/iconfont.css';
 
 import { mapProps, defaultOptions } from './map';
 
@@ -24,9 +24,7 @@ const props = defineProps(mapProps);
 const $emit = defineEmits(['update']);
 const L = useLeaflet(props);
 
-const createUuid = (from: number = 5000000000, to: number = 59999999999) =>
-	random(from, to > from ? to : from + 9999999999).toString();
-
+/* uuid */
 const uuid = createUuid();
 
 // 高德地图
@@ -180,7 +178,7 @@ function geojsonToLayer(geojson: any) {
  * 处理外部传入的geojson 映射为地图标记
  */
 function handleUserGeojson() {
-	const { valid } = validGeojson(props.data);
+	const { valid } = geojsonValidate(props.data);
 	let r = JSON.parse(props.data);
 	if (!valid)
 		r = {
@@ -192,23 +190,6 @@ function handleUserGeojson() {
 		map.value && fitView();
 	}
 }
-
-/**
- * 数据校验
- * @param source
- */
-const validGeojson = (source: any) => {
-	const err = geojsonhint.hint(source);
-	const r = {
-		messages: [],
-		valid: true,
-	};
-	if (err && err.length) {
-		r.valid = false;
-		r.messages = err.map((e: { message: string; line: number }) => e.message);
-	}
-	return r;
-};
 
 /**
  * 所有绘制元素展示在可视范围
@@ -426,7 +407,7 @@ const flyTo = (position: number[] | number[][], zoom: 18) => {
 	}
 };
 
-onMounted(() => nextTick(()=>init()));
+onMounted(() => nextTick(() => init()));
 
 onBeforeUnmount(() => {
 	map.value.remove();
@@ -443,7 +424,7 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.mapView {
+.map {
 	:deep {
 		.leaflet {
 			&-top {
@@ -580,7 +561,6 @@ defineExpose({
 				}
 			}
 		}
-
 	}
 }
 </style>

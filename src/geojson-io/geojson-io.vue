@@ -7,21 +7,23 @@
 -->
 <template>
 	<!-- 主面板 -->
-	<el-row class="geojson-main" :style="{ height, width }">
+	<div class="geo-io" :style="{ height, width }">
 		<!-- 地图 -->
-		<el-col class="map-view" :span="mapPanelSpan">
+		<div class="geo-io-map">
 			<Map ref="mapRef" :style="{ height }" @update="updateMapItems" :data="model" />
-		</el-col>
+		</div>
 		<!-- 编辑器 -->
-		<el-col v-if="editorView" :span="8" :class="['editor-view', 'right', { fold }]">
-			<div class="editor-view_content">
+		<div :span="8" :class="['geo-io-editor', 'right', { fold }]" v-if="editor">
+			<div class="geo-io-editor__content" v-show="!fold">
 				<el-tabs type="border-card" class="tab" v-model="activeTab" @tab-remove="handleTabRemove">
-					<el-tab-pane :padding="0" name="expand" disabled>
-						<span slot="label"><i class="el-icon-date" style="opacity: 0" /></span>
+					<el-tab-pane :padding="0" disabled>
+						<template #label>
+							<span></span>
+						</template>
 					</el-tab-pane>
 					<el-tab-pane :padding="0" name="json">
-						<span slot="label"
-							><i class="el-icon-date" />
+						<template #label>
+							<el-icon><Document /></el-icon>
 							<span> JSON </span>
 							<el-tooltip
 								class="item"
@@ -31,7 +33,7 @@
 							>
 								<i class="el-icon-warning-outline" />
 							</el-tooltip>
-						</span>
+						</template>
 					</el-tab-pane>
 					<!-- 错误处理 -->
 					<el-tab-pane :padding="0" name="geojsonValidate" v-if="errorGeojson" closable>
@@ -56,37 +58,52 @@
 					</el-tab-pane>
 				</el-tabs>
 				<!-- 工具栏 -->
-				<FileBar @import="handleImport" @export="handleExport" />
+				<!-- <FileBar @import="handleImport" @export="handleExport" /> -->
 				<!-- 编辑器 -->
 				<Editor
 					ref="editorRef"
 					:style="{ height }"
 					style="flex-grow: 1; overflow: auto"
-					:data="activeTab === 'json' ? model : errorGeojson"
+					:code="activeTab === 'json' ? model : errorGeojson"
 					class="editor"
 				/>
 			</div>
 			<!-- 展开/收起 -->
-			<div class="fold-item" :style="foldItemStyle" @click="toggleFold">
-				<i
-					:class="['fold-icon', `el-icon-s-${!fold ? 'un' : ''}fold`]"
+			<div class="geo-io-editor__toggle" :style="foldItemStyle" @click="toggleFold">
+				<el-icon :size="20" :title="`${fold ? '展开' : '收起'}编辑器`"
+					><Expand v-if="!fold" /> <Fold v-else
+				/></el-icon>
+				<!-- <i
+					:class="['geo-io-editor__icon', `el-icon-s-${!fold ? 'un' : ''}fold`]"
 					:title="`${fold ? '展开' : '收起'}编辑器`"
-				/>
+				/> -->
 			</div>
-		</el-col>
-	</el-row>
+		</div>
+	</div>
 </template>
 
 <script setup lang="ts" name="geojson-io">
 import { ref, computed } from 'vue';
 
 import { saveAs } from 'file-saver';
-import geojsonhint from 'geojsonhint';
+
+import { geojsonValidate as validate } from '@/utils/validate';
 
 import Map from './components/map/map.vue';
 import Editor from './components/editor.vue';
-import FileBar from './components/file-bar.vue';
-import { MessageBox, Message, ElTabPane, ElCol, ElTabs, ElRow, ElTooltip } from './components/el';
+import {
+	MessageBox,
+	Message,
+	ElTabPane,
+	ElCol,
+	ElTabs,
+	ElRow,
+	ElTooltip,
+	ElIcon,
+	Document,
+	Expand,
+	Fold,
+} from './components/el';
 
 import { geojsonIoProps, defaultData, EVENTS, useModel, useMap } from './geojson-io';
 import useEditor from './hooks/useEditor';
@@ -115,7 +132,7 @@ const {
  * 地图面板span
  */
 const mapPanelSpan = computed(() => {
-	if (!props.editorView || fold.value) return 24;
+	if (fold.value && props.editor) return 24;
 	return 16;
 });
 
@@ -123,7 +140,8 @@ const mapPanelSpan = computed(() => {
  * 导入
  */
 const handleImport = (value: string) => {
-	if (!validate(value)) {
+	const { valid } = validate(value);
+	if (!valid) {
 		MessageBox('当前导入的数据存在格式错误，是否进行错误处理?', 'Warning')
 			.then(() => {
 				errorGeojson.value = value;
@@ -143,15 +161,6 @@ const handleExport = () => {
 		type: 'text/plain;charset=utf-8',
 	});
 	saveAs(blob, `geojson.json`);
-};
-
-/**
- * geojson校验
- */
-const validate = (value: string) => {
-	const err = geojsonhint.hint(value);
-	if (err && err.length) return false;
-	return true;
 };
 
 /**
@@ -202,22 +211,27 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.geojson-main {
+.geo-io {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
 	:deep(.el-tabs__content) {
 		display: none;
 	}
 
-	.map-view {
+	&-map {
 		position: relative;
-		height: 100%;
+		flex: 1;
 	}
 
-	.editor-view {
+	&-editor {
+		width: 25%;
 		height: 100%;
 		box-shadow: rgb(0 0 0 / 10%) -2px 0px 0px;
 		position: relative;
 
-		&_content {
+		&__content {
 			display: flex;
 			flex-direction: column;
 			height: 100%;
@@ -227,31 +241,35 @@ defineExpose({
 			}
 		}
 
-		// 折叠状态
 		&.fold {
 			width: 0;
-			.tab {
-				display: none;
-			}
+			// position: absolute;
+			// top: 0;
+			// right: -100%;
+			// :first-child {
+			// 	display: none;
+			// }
 		}
 
-		.fold {
-			&-item {
-				position: absolute;
-				z-index: 998;
-				background: #f5f7fa;
-				padding: 10px;
-				cursor: pointer;
-				&:hover {
-					.fold-icon {
-						color: #409eff;
-					}
+		&__toggle {
+			position: absolute;
+			z-index: 998;
+			// background: #f5f7fa;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			cursor: pointer;
+			&:hover {
+				.fold-icon {
+					color: #409eff;
 				}
 			}
-			&-icon {
-				color: #333;
-				font-size: 20px;
-			}
+		}
+		&__icon {
+			color: #333;
+			font-size: 20px;
 		}
 	}
 }

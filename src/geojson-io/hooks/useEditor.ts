@@ -19,7 +19,7 @@ export default (
 
 	// 收展按钮的样式
 	const foldItemStyle = computed(() => {
-		return { left: !fold.value ? '8px' : `-${180 + 46}px`, top: !fold.value ? '-1px' : 0 };
+		return { left: !fold.value ? '0' : `-${50}px`, top: !fold.value ? '-1px' : 0 };
 	});
 
 	/**

@@ -13,11 +13,16 @@
 		"declaration": true,
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/*"]
+			"@/*": ["src/geojson-io/*"]
 		},
 		"skipLibCheck": true,
 		"typeRoots": ["./node_modules/@types/", "./typings"]
 	},
-	"include": ["src/**/*.ts", "src/**/*.vue", "typings/*.d.ts", "src/geojson-io/core/controls/distortableimage/index.js"],
+	"include": [
+		"src/**/*.ts",
+		"src/**/*.vue",
+		"typings/*.d.ts",
+		"src/geojson-io/core/controls/distortableimage/index.js"
+	],
 	"references": [{ "path": "./tsconfig.node.json" }]
 }

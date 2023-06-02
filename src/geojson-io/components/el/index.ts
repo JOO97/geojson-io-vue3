@@ -1,4 +1,5 @@
-import 'element-plus/es/components/message/style/css';
+import 'element-plus/dist/index.css';
+
 import {
 	ElMessage,
 	ElMessageBox,
@@ -13,7 +14,10 @@ import {
 	ElButton,
 	ElDialog,
 	ElAlert,
+	ElIcon,
 } from 'element-plus';
+
+import { Document, Expand, Fold, ArrowDown } from '@element-plus/icons-vue';
 
 function MessageBox(message: string, title: string, type = 'warning') {
 	return ElMessageBox.confirm(message, title, {
@@ -37,4 +41,9 @@ export {
 	ElButton,
 	ElDialog,
 	ElAlert,
+	ElIcon,
+	Document,
+	Expand,
+	Fold,
+	ArrowDown,
 };

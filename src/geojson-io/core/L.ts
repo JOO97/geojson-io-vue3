@@ -4,6 +4,10 @@ import 'leaflet-hash';
 import 'leaflet-modal';
 import 'leaflet-distortableimage/dist/vendor';
 import 'leaflet-distortableimage';
+
+// import './controls/distortableimage/index.js';
+// import './controls/distortableimage/vendor.js';
+
 import 'leaflet-contextmenu';
 
 // leaflet style

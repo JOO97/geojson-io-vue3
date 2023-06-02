@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
 import { defaultsDeep, cloneDeep, random } from 'lodash-es';
 //校验geojson
 import geojsonRewind from 'geojson-rewind';
@@ -15,7 +15,6 @@ import { Message } from './../el';
 import '../../assets/font/iconfont.css';
 
 import { mapProps, defaultOptions } from './map';
-import { layer } from '@codemirror/view';
 
 interface IDynamicObj {
 	[key: string]: any;
@@ -69,8 +68,7 @@ const init = () => {
 	map.value = mapIns;
 	mapLayer.value = mapLayerIns;
 
-	//当前选择的位置经纬度添加到hash中 非electron环境下 使用hash
-	if (!(window && (window as typeof window & { process: string }).process)) L.hash(mapIns);
+	if (options.value.hash) L.hash(mapIns);
 
 	L.control.scale().setPosition('bottomright').addTo(mapIns);
 	L.control
@@ -428,7 +426,7 @@ const flyTo = (position: number[] | number[][], zoom: 18) => {
 	}
 };
 
-onMounted(() => init());
+onMounted(() => nextTick(()=>init()));
 
 onBeforeUnmount(() => {
 	map.value.remove();
@@ -446,7 +444,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .mapView {
-	::v-deep {
+	:deep {
 		.leaflet {
 			&-top {
 				top: 45px;
@@ -582,6 +580,7 @@ defineExpose({
 				}
 			}
 		}
+
 	}
 }
 </style>

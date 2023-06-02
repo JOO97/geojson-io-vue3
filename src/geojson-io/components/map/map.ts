@@ -10,9 +10,10 @@ export const defaultOptions = {
 		contextmenu: true,
 	},
 	draw: {
-		image: false,
+		image: true,
 	},
 	markerSize: 40,
+    hash: false
 };
 
 export const mapProps = {

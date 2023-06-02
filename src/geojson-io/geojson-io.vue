@@ -203,7 +203,7 @@ defineExpose({
 
 <style lang="scss" scoped>
 .geojson-main {
-	::v-deep .el-tabs__content {
+	:deep(.el-tabs__content) {
 		display: none;
 	}
 

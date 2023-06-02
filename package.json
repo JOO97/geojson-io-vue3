@@ -1,6 +1,6 @@
 {
 	"name": "geojson-io-visix",
-	"version": "1.0.8",
+	"version": "1.0.10",
 	"main": "geojson-io.es.js",
 	"types": "types/src/geojson-io/main.d.ts",
 	"files": [

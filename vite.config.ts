@@ -33,6 +33,7 @@ export default defineConfig({
 			entry: resolve(__dirname, 'src/main.ts'),
 			name: 'geojson-io',
 			fileName: (format) => `geojson-io.${format}.js`,
+			
 		},
 		rollupOptions: {
 			external: ['vue', 'element-plus'],

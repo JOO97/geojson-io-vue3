@@ -3,25 +3,25 @@
 		<GeojsonIo
 			ref="geojsonIoRef"
 			height="500px"
-			width="100%"
+			width="50%"
 			style="flex-shrink: 0"
 			v-model="value"
 			v-bind="config"
 		/>
-		<!-- <div>{{ value }}</div>
-		<button @click="test">test</button> -->
+		<div>{{ value }}</div>
+		<button @click="test">test</button>
 	</div>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive } from 'vue';
-import GeojsonIo from '../../src/main';
+import GeojsonIo from '../../src/index';
 
 const geojsonIoRef = ref<typeof GeojsonIo | null>(null);
 
 const config = reactive({
 	fileBar: true,
-	editor: true,
+	editor: false,
 });
 const value = ref(
 	`{

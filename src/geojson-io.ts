@@ -74,7 +74,6 @@ export const useMap = (props: geojsonIoProps, { model }: Partial<ReturnType<type
 	 * @param data
 	 */
 	const updateMapItems = (data: object) => {
-		console.log('updateMapItems', data);
 		model!.value = data ? JSON.stringify(data, null, 4) : '';
 	};
 

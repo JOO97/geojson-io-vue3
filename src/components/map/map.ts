@@ -1,5 +1,4 @@
-import { ref, computed, getCurrentInstance } from 'vue';
-import type { ExtractPropTypes, PropType } from 'vue';
+import type { ExtractPropTypes } from 'vue';
 
 export const defaultOptions = {
 	base: {
@@ -13,7 +12,8 @@ export const defaultOptions = {
 		image: true,
 	},
 	markerSize: 40,
-    hash: false
+	hash: false,
+	precision: 6,
 };
 
 export const mapProps = {
@@ -29,7 +29,5 @@ export const mapProps = {
 		default: () => defaultOptions,
 	},
 };
-
-export const useDrawControl = (props: mapProps, { L, map }: { L: any; map: any }) => {};
 
 export type mapProps = ExtractPropTypes<typeof mapProps>;

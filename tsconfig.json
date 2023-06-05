@@ -13,7 +13,7 @@
 		"declaration": true,
 		"baseUrl": ".",
 		"paths": {
-			"@/*": ["src/geojson-io/*"]
+			"@/*": ["src/*"]
 		},
 		"skipLibCheck": true,
 		"typeRoots": ["./node_modules/@types/", "./typings"]

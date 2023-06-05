@@ -8,7 +8,13 @@ export default defineConfig({
 	plugins: [vue()],
 	resolve: {
 		alias: {
-			'@': resolve(__dirname, '..', './src/geojson-io'),
+			'@': resolve(__dirname, '..', './src'),
+		},
+	},
+	server: {
+		fs: {
+			// 允许为项目根目录的上一级提供服务
+			allow: ['..'],
 		},
 	},
 });

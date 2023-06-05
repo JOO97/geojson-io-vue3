@@ -32,25 +32,6 @@ import { Codemirror } from 'vue-codemirror';
 
 import { debounce } from 'lodash';
 
-// import '@codemirror/addon/fold/foldgutter.css';
-// import '@codemirror/addon/fold/foldcode';
-// import '@codemirror/addon/fold/foldgutter';
-// import '@codemirror/addon/fold/brace-fold';
-// import '@codemirror/addon/fold/comment-fold';
-// import '@codemirror/addon/fold/markdown-fold';
-// import '@codemirror/addon/fold/xml-fold';
-// import '@codemirror/addon/fold/indent-fold';
-
-//检索
-// import '@codemirror/addon/scroll/annotatescrollbar.js';
-// import '@codemirror/addon/search/matchesonscrollbar.js';
-// import '@codemirror/addon/search/match-highlighter.js';
-// import '@codemirror/addon/search/jump-to-line.js';
-// import '@codemirror/addon/dialog/dialog.js';
-// import '@codemirror/addon/dialog/dialog.css';
-// import '@codemirror/addon/search/searchcursor.js';
-// import '@codemirror/addon/search/search.js';
-
 import { ElAlert } from '@/components/el';
 import { geojsonHint } from '@/utils/validate'; //校验
 
@@ -101,10 +82,8 @@ const extensions = [
 	gutter({
 		class: 'cm-mygutter',
 		lineMarker: (view, line) => {
-			console.log('gutter1', view.state.toJSON(), line, line.from, errorInfo.value?.line);
 			validateEditorValue(view.state.toJSON().doc, (err: any) => {
 				errorInfo.value = err;
-				console.log(0);
 			});
 			if (errorInfo.value && line.from <= errorInfo.value?.line && line.to >= errorInfo.value?.line)
 				return emptyMarker;

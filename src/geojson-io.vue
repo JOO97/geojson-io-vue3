@@ -60,23 +60,19 @@
 				<!-- 工具栏 -->
 				<!-- <FileBar @import="handleImport" @export="handleExport" /> -->
 				<!-- 编辑器 -->
-				<Editor
+				<!-- <Editor
 					ref="editorRef"
 					:style="{ height }"
 					style="flex-grow: 1; overflow: auto"
 					:code="activeTab === 'json' ? model : errorGeojson"
 					class="editor"
-				/>
+				/> -->
 			</div>
 			<!-- 展开/收起 -->
 			<div class="geo-io-editor__toggle" :style="foldItemStyle" @click="toggleFold">
 				<el-icon :size="20" :title="`${fold ? '展开' : '收起'}编辑器`"
 					><Expand v-if="!fold" /> <Fold v-else
 				/></el-icon>
-				<!-- <i
-					:class="['geo-io-editor__icon', `el-icon-s-${!fold ? 'un' : ''}fold`]"
-					:title="`${fold ? '展开' : '收起'}编辑器`"
-				/> -->
 			</div>
 		</div>
 	</div>
@@ -90,14 +86,12 @@ import { saveAs } from 'file-saver';
 import { geojsonValidate as validate } from '@/utils/validate';
 
 import Map from './components/map/map.vue';
-import Editor from './components/editor.vue';
+// import Editor from './components/editor.vue';
 import {
 	MessageBox,
 	Message,
 	ElTabPane,
-	ElCol,
 	ElTabs,
-	ElRow,
 	ElTooltip,
 	ElIcon,
 	Document,
@@ -105,7 +99,7 @@ import {
 	Fold,
 } from './components/el';
 
-import { geojsonIoProps, defaultData, EVENTS, useModel, useMap } from './geojson-io';
+import { geojsonIoProps, EVENTS, useModel, useMap } from './geojson-io';
 import useEditor from './hooks/useEditor';
 
 const props = defineProps(geojsonIoProps);
@@ -126,15 +120,6 @@ const {
 	clearEditor,
 	handleTabRemove,
 } = useEditor(props, { model, mapRef });
-
-// console.log(props.modelValue, model.value);
-/**
- * 地图面板span
- */
-const mapPanelSpan = computed(() => {
-	if (fold.value && props.editor) return 24;
-	return 16;
-});
 
 /**
  * 导入
@@ -223,6 +208,7 @@ defineExpose({
 	&-map {
 		position: relative;
 		flex: 1;
+		height: 100%;
 	}
 
 	&-editor {

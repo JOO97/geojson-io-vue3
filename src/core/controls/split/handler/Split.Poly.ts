@@ -414,6 +414,7 @@ const registerSplitPoly = (L: any) => {
 			const lines = this._defaultShape();
 			const item1 = lines.slice(0, pos);
 			const item2 = lines.slice(pos, lines.length);
+
 			this._poly._map.fire(L.Draw.Event.SPLIT, {
 				poly: this._poly,
 				items: [item1, item2],

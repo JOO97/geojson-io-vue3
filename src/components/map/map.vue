@@ -4,7 +4,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick } from 'vue';
+import { ref, watch, computed, onMounted, onBeforeUnmount, nextTick, toRaw } from 'vue';
 import { defaultsDeep, cloneDeep } from 'lodash-es';
 
 import { geojsonValidate, geojsonRewind } from '@/utils/validate';
@@ -106,9 +106,13 @@ const init = () => {
 		// 图片控件
 		if (options.layerType === 'image') return;
 	});
+
 	mapIns.on('popupopen', (e: any) => popupOpenHandler(e));
 	mapIns.on('draw:splittingstart', () => (mode = 'splitting'));
-	mapIns.on('draw:splittingfinished', () => (mode = 'default'));
+	mapIns.on('draw:splittingfinished', () => {
+		mode = 'default';
+		console.log('draw:splittingfinished');
+	});
 	//右键点击线元素上的编辑点时触发
 	mapIns.on(L.Draw.Event.SPLIT, (payload: any) => splitPolyline(payload));
 	mapIns.on(L.Draw.Event.PolylineMarkerRemove, (payload: any) => removeMarkerOfPolyline(payload));
@@ -119,10 +123,15 @@ const init = () => {
  * @param e
  */
 function created(e: any) {
-	console.log('e', e);
-	// if (e.feature.properties._name) e.feature.properties._name = `${e.feature.geometry.type} 1`;
-	// if (e.feature.properties._gid) e.feature.properties._gid = createUuid();
-	mapLayer.value && mapLayer.value.addLayer(e.layer);
+	const geojson = mapLayer.value.toGeoJSON(options.value.precision);
+	const newGeojson = e.layer.toGeoJSON(options.value.precision);
+	// 添加默认属性
+	newGeojson.properties = {
+		_name: `${newGeojson.geometry.type} 1`,
+		_gid: createUuid(),
+	};
+	geojson.features.push(newGeojson);
+	geojsonToLayer(geojson);
 	update();
 }
 
@@ -132,7 +141,7 @@ function created(e: any) {
 function update() {
 	// NOTE： toGeoJSON() 需要指定精度(大于默认值6)
 	map.value && map.value.closePopup();
-	let geojson = mapLayer.value.toGeoJSON(L.CONSTANT.precision);
+	let geojson = mapLayer.value.toGeoJSON(options.value.precision);
 	geojson = geojsonRewind(geojson);
 	$emit('update', geojson);
 }
@@ -144,7 +153,8 @@ function update() {
  */
 function geojsonToLayer(geojson: any) {
 	if (!mapLayer.value) return;
-	mapLayer.value.clearLayers();
+	// NOTE: 使用addLayer,removeLayer,clearLayers方法时需要 先调用toRaw
+	toRaw(mapLayer.value).clearLayers();
 	let index = 0;
 	L.geoJson(geojson, {
 		style: { color: '#000' },
@@ -155,7 +165,6 @@ function geojsonToLayer(geojson: any) {
 	function add(l: any) {
 		// 绑定popup
 		l.customIndex = index++;
-		console.log(';', l);
 		l.bindPopup(
 			L.popup(
 				{
@@ -170,7 +179,7 @@ function geojsonToLayer(geojson: any) {
 		);
 
 		//添加到地图上
-		l.addTo(mapLayer.value);
+		l.addTo(toRaw(mapLayer.value));
 	}
 }
 
@@ -295,8 +304,8 @@ function popupContent(l: any) {
 		geometry: { type },
 	} = l.feature;
 	const basicProps = {
-		_name: properties._name,
-		_gid: properties._gid,
+		_name: properties._name || '',
+		_gid: properties._gid || '',
 	};
 	const props: { [key: string]: string } = {};
 	Object.keys(properties).forEach((key) => {
@@ -338,22 +347,9 @@ function invalidateSize() {
  */
 function splitPolyline(e: any) {
 	const {
-		poly: { feature, customIndex },
+		poly: { customIndex },
 		items: [coordinates1, coordinates2],
 	} = e;
-	let { coordinates } = feature.geometry;
-	const coordinatesLength = coordinates.length;
-	// coordinates.forEach(([lng, lat], index) => {
-	//   console.log('index', index)
-	//   if (lat === _latlng.lat && lng === _latlng.lng) {
-	//     let pos = index + 1
-	//     if (coordinatesLength === 4 && index === 2) {
-	//       pos -= 1
-	//     }
-	//     coordinates1 = coordinates.slice(0, pos)
-	//     coordinates2 = coordinates.slice(pos, coordinatesLength)
-	//   }
-	// })
 	if (coordinates1.length < 2 || coordinates2.length < 2)
 		return Message.warning('操作失败: 拆分后的每段线数据需要包含至少2个坐标点');
 	const poly = JSON.parse(props.data).features[customIndex];
@@ -446,29 +442,12 @@ defineExpose({
 						left: 0;
 					}
 				}
-				&-touch {
-					.leaflet-draw-toolbar {
-						.leaflet-draw-edit-split {
+				.leaflet {
+					&-draw {
+						&-edit-split {
 							position: relative;
-							background-image: unset;
-							background-repeat: unset;
-							background-size: unset;
-							background-clip: unset;
-							&::after {
-								font-family: iconfont !important;
-								font-style: normal;
-								-webkit-font-smoothing: antialiased;
-								-moz-osx-font-smoothing: grayscale;
-								position: absolute;
-								top: 50%;
-								left: 50%;
-								font-size: 15px;
-								transform: translate(-50%, -50%);
-								font-weight: 600;
-								&::before {
-									content: '\e7cd';
-								}
-							}
+							background-image: url('../../assets/cut.png') !important;
+							background-size: 68% 68%;
 						}
 					}
 				}

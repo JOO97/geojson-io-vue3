@@ -32,13 +32,13 @@ export default defineConfig({
 
 	resolve: {
 		alias: {
-			'@': resolve(__dirname, './src/geojson-io'),
+			'@': resolve(__dirname, './src'),
 		},
 	},
 	build: {
 		// sourcemap: true,
 		lib: {
-			entry: resolve(__dirname, 'src/main.ts'),
+			entry: resolve(__dirname, 'src/index.ts'),
 			name: 'geojson-io',
 			fileName: (format) => `geojson-io.${format}.js`,
 		},
@@ -51,6 +51,12 @@ export default defineConfig({
 					'element-plus': 'ElementPlus',
 				},
 			},
+		},
+	},
+	server: {
+		fs: {
+			// 允许为项目根目录的上一级提供服务
+			allow: ['..'],
 		},
 	},
 });

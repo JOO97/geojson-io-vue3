@@ -225,60 +225,7 @@ const registerSplitPoly = (L: any) => {
 			return removed;
 		},
 
-		_removeMarker: function (marker: {
-			_index: any;
-			off: (
-				arg0: string,
-				arg1: any,
-				arg2: any
-			) => {
-				(): any;
-				new (): any;
-				off: {
-					(arg0: string, arg1: any, arg2: any): {
-						(): any;
-						new (): any;
-						off: {
-							(arg0: string, arg1: any, arg2: any): {
-								(): any;
-								new (): any;
-								off: {
-									(arg0: string, arg1: any, arg2: any): {
-										(): any;
-										new (): any;
-										off: {
-											(arg0: string, arg1: any, arg2: any): {
-												(): any;
-												new (): any;
-												off: {
-													(arg0: string, arg1: any, arg2: any): {
-														(): any;
-														new (): any;
-														off: {
-															(arg0: string, arg1: any, arg2: any): {
-																(): any;
-																new (): any;
-																unbindContextMenu: { (arg0: any): void; new (): any };
-															};
-															new (): any;
-														};
-													};
-													new (): any;
-												};
-											};
-											new (): any;
-										};
-									};
-									new (): any;
-								};
-							};
-							new (): any;
-						};
-					};
-					new (): any;
-				};
-			};
-		}) {
+		_removeMarker: function (marker: any) {
 			var i = marker._index;
 
 			this._markerGroup.removeLayer(marker);
@@ -410,6 +357,38 @@ const registerSplitPoly = (L: any) => {
 		 * splitPolyline
 		 */
 		_splitPolyline: function (e: { _index: any }) {
+			// console.log('e', e, this._map, this._poly, this._featureGroup);
+
+			// // this._map.getLayer(e._leaflet_id);
+
+			// const pos = e._index;
+			// const lines = this._defaultShape();
+			// const item1 = lines.slice(0, pos);
+			// const item2 = lines.slice(pos, lines.length);
+
+			// const { ploy, _markerGroup: layers } = this;
+			// if (item1.length < 2 || item2.length < 2)
+			// 	return this._poly._map.fire('draw:splittingerror', {
+			// 		message: '操作失败: 拆分后的每段线数据需要包含至少2个坐标点',
+			// 	});
+
+			// const poly = this._poly;
+			// const polys = [
+			// 	{
+			// 		...poly,
+			// 		geometry: {
+			// 			...poly.geometry,
+			// 			coordinates: item1.map(({ lat, lng }: { lat: string; lng: string }) => [lng, lat]),
+			// 		},
+			// 	},
+			// 	{
+			// 		...poly,
+			// 		geometry: {
+			// 			...poly.geometry,
+			// 			coordinates: item2.map(({ lat, lng }: { lat: string; lng: string }) => [lng, lat]),
+			// 		},
+			// 	},
+			// ];
 			const pos = e._index;
 			const lines = this._defaultShape();
 			const item1 = lines.slice(0, pos);

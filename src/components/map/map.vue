@@ -106,13 +106,9 @@ const init = () => {
 		// 图片控件
 		if (options.layerType === 'image') return;
 	});
-
 	mapIns.on('popupopen', (e: any) => popupOpenHandler(e));
 	mapIns.on('draw:splittingstart', () => (mode = 'splitting'));
-	mapIns.on('draw:splittingfinished', () => {
-		mode = 'default';
-		console.log('draw:splittingfinished');
-	});
+	mapIns.on('draw:splittingfinished', () => (mode = 'default'));
 	//右键点击线元素上的编辑点时触发
 	mapIns.on(L.Draw.Event.SPLIT, (payload: any) => splitPolyline(payload));
 	mapIns.on(L.Draw.Event.PolylineMarkerRemove, (payload: any) => removeMarkerOfPolyline(payload));

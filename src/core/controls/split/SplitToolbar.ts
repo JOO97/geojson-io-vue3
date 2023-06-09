@@ -27,22 +27,18 @@ const SplitToolbar = (L: any) => {
 
 		getActions: function () {
 			var actions = [
-				{
-					title: L.drawLocal.split.toolbar.actions.save.title,
-					text: L.drawLocal.split.toolbar.actions.save.text,
-					callback: this._save,
-					context: this,
-				},
 				// {
-				// 	title: L.drawLocal.split.toolbar.actions.cancel.title,
-				// 	text: L.drawLocal.split.toolbar.actions.cancel.text,
-				// 	callback: (e) => {
-				// 		console.log('e', e);
-				// 		this.disable();
-				// 		this._map.fire('draw:splittingcancel');
-				// 	},
+				// 	title: L.drawLocal.split.toolbar.actions.save.title,
+				// 	text: L.drawLocal.split.toolbar.actions.save.text,
+				// 	callback: this._save,
 				// 	context: this,
 				// },
+				{
+					title: L.drawLocal.split.toolbar.actions.cancel.title,
+					text: L.drawLocal.split.toolbar.actions.cancel.text,
+					callback: this.disable,
+					context: this,
+				},
 			];
 
 			return actions;

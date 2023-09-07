@@ -3,7 +3,7 @@ import type { ExtractPropTypes, PropType } from 'vue';
 import type GeojsonIo from './geojson-io.vue';
 import type Map from './components/map.vue';
 
-const definePropType = <T>(val: any): PropType<T> => val;
+// const definePropType = <T>(val: any): PropType<T> => val;
 
 export const defaultData = `{
   "type": "FeatureCollection",
@@ -16,7 +16,7 @@ export const EVENTS = {
 
 export const geojsonIoProps = {
 	modelValue: {
-		type: definePropType<string | number | null | undefined>([String, Number, Object]),
+		type: String,
 		default: '',
 	},
 	height: {

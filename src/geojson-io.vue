@@ -10,7 +10,12 @@
 	<div class="geo-io" :style="{ height, width }">
 		<!-- 地图 -->
 		<div class="geo-io-map">
-			<Map ref="mapRef" :style="{ height }" @update="updateMapItems" :data="model" />
+			<Map
+				ref="mapRef"
+				:style="{ height }"
+				@update="updateMapItems"
+				:data="model ? model as string: ''"
+			/>
 		</div>
 		<!-- 编辑器 -->
 		<div :span="8" :class="['geo-io-editor', 'right', { fold }]" v-if="editor">
@@ -141,12 +146,12 @@ const handleImport = (value: string) => {
 /**
  * 导出
  */
-const handleExport = () => {
-	var blob = new Blob([model.value], {
-		type: 'text/plain;charset=utf-8',
-	});
-	saveAs(blob, `geojson.json`);
-};
+// const handleExport = () => {
+// 	var blob = new Blob([model.value], {
+// 		type: 'text/plain;charset=utf-8',
+// 	});
+// 	saveAs(blob, `geojson.json`);
+// };
 
 /**
  * 获取编辑器错误状态

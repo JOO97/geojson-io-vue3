@@ -30,7 +30,7 @@ import { linter, Diagnostic } from '@codemirror/lint';
 import { json } from '@codemirror/lang-json';
 import { Codemirror } from 'vue-codemirror';
 
-import { debounce } from 'lodash';
+import { debounce } from 'lodash-es';
 
 import { ElAlert } from '@/components/el';
 import { geojsonHint } from '@/utils/validate'; //校验

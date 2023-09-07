@@ -1,9 +1,7 @@
 import { ref, computed, getCurrentInstance } from 'vue';
-import type { ExtractPropTypes, PropType } from 'vue';
+import type { ExtractPropTypes } from 'vue';
 import type GeojsonIo from './geojson-io.vue';
 import type Map from './components/map.vue';
-
-// const definePropType = <T>(val: any): PropType<T> => val;
 
 export const defaultData = `{
   "type": "FeatureCollection",

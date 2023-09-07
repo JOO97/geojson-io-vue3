@@ -6,22 +6,27 @@ import 'leaflet-distortableimage/dist/vendor';
 import 'leaflet-distortableimage';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.min.js';
 
-// leaflet style
+/* Leaflet style */
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
 import 'leaflet-modal/dist/leaflet.modal.min.css';
 import 'leaflet-distortableimage/dist/leaflet.distortableimage.css';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.min.css';
 
-//marker icon
+/* Marker icon */
 import icon from 'leaflet/dist/images/marker-icon.png';
-// import iconShadow from 'leaflet/dist/images/marker-shadow.png'
 
+/* Local file */
 import drawLocal from '../local';
 import controlRegister from './controls';
 
+/* Marker radio */
 const RADIO = 25 / 41;
 
+/**
+ * Use leaflet hook
+ * @param props
+ */
 export const useLeaflet = (props: any) => {
 	const newL = L as typeof L & any;
 

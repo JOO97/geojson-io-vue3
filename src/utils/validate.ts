@@ -3,12 +3,18 @@ import rewind from 'geojson-rewind';
 
 /**
  * 处理错误行数
+ * @param line
+ * @param message
+ * @returns number
  */
 function handleLine(line: number, message: string): number {
 	return message.indexOf('line') !== -1 ? parseInt(message.split(':')[0].split('line ')[1]) : line;
 }
 
-//创建错误标记
+/**
+ * 创建错误标记
+ * @param msg
+ */
 function makeMarker(msg: string) {
 	var marker = document.createElement('abbr');
 	marker.title = msg;
@@ -18,6 +24,11 @@ function makeMarker(msg: string) {
 	return marker;
 }
 
+/**
+ * 处理编辑器错误(单个)
+ * @param msg
+ * @param editor
+ */
 function handleError(msg: string, editor: any) {
 	const match = msg.match(/line (\d+)/);
 	if (match && match[1]) {
@@ -26,6 +37,11 @@ function handleError(msg: string, editor: any) {
 	}
 }
 
+/**
+ * 处理编辑器错误
+ * @param errors
+ * @param editor
+ */
 function handleErrors(errors: any[], editor: any) {
 	editor.doc.clearGutter('error');
 	errors.forEach(function (e) {
@@ -35,6 +51,8 @@ function handleErrors(errors: any[], editor: any) {
 
 /**
  * 校验编辑器中的数据
+ * @param editor
+ * @param callback
  */
 const validateEditorValue = (editor: any, callback: any) => {
 	var err = hint(editor.getValue());
@@ -75,6 +93,7 @@ const validateEditorValue = (editor: any, callback: any) => {
 
 /**
  * 校验geojson
+ * @param source
  */
 export const geojsonValidate = (source: string) => {
 	const r = {
@@ -90,7 +109,6 @@ export const geojsonValidate = (source: string) => {
 };
 
 export const geojsonRewind = rewind;
-
 export const geojsonHint = hint;
 
 export default validateEditorValue;

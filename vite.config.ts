@@ -5,6 +5,9 @@ import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import dts from 'vite-plugin-dts';
 import copyFiles from 'vite-plugin-copy-files';
 
+import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
+import { visualizer } from 'rollup-plugin-visualizer';
+
 // https://vitejs.dev/config/
 export default defineConfig({
 	plugins: [
@@ -28,8 +31,12 @@ export default defineConfig({
 			include: [/package.json/, /README.md/],
 			// formatFilePath: (file: string) => resolve(__dirname, `./dist/${file}`),
 		}),
+		visualizer({
+			emitFile: true,
+			filename: 'stats.html',
+		}),
+		// chunkSplitPlugin(),
 	],
-
 	resolve: {
 		alias: {
 			'@': resolve(__dirname, './src'),
@@ -51,6 +58,7 @@ export default defineConfig({
 					'element-plus': 'ElementPlus',
 				},
 			},
+			treeshake: true,
 		},
 	},
 	server: {

@@ -84,9 +84,7 @@
 </template>
 
 <script setup lang="ts" name="geojson-io">
-import { ref, computed } from 'vue';
-
-import { saveAs } from 'file-saver';
+// import { saveAs } from 'file-saver';
 
 import { geojsonValidate as validate } from '@/utils/validate';
 
@@ -129,19 +127,19 @@ const {
 /**
  * 导入
  */
-const handleImport = (value: string) => {
-	const { valid } = validate(value);
-	if (!valid) {
-		MessageBox('当前导入的数据存在格式错误，是否进行错误处理?', 'Warning')
-			.then(() => {
-				errorGeojson.value = value;
-				activeTab.value = 'geojsonValidate';
-			})
-			.catch(() => {
-				Message.info('取消导入');
-			});
-	} else handleMerge(value);
-};
+// const handleImport = (value: string) => {
+// 	const { valid } = validate(value);
+// 	if (!valid) {
+// 		MessageBox('当前导入的数据存在格式错误，是否进行错误处理?', 'Warning')
+// 			.then(() => {
+// 				errorGeojson.value = value;
+// 				activeTab.value = 'geojsonValidate';
+// 			})
+// 			.catch(() => {
+// 				Message.info('取消导入');
+// 			});
+// 	} else handleMerge(value);
+// };
 
 /**
  * 导出
@@ -234,18 +232,11 @@ defineExpose({
 
 		&.fold {
 			width: 0;
-			// position: absolute;
-			// top: 0;
-			// right: -100%;
-			// :first-child {
-			// 	display: none;
-			// }
 		}
 
 		&__toggle {
 			position: absolute;
 			z-index: 998;
-			// background: #f5f7fa;
 			width: 40px;
 			height: 40px;
 			display: flex;

@@ -12,7 +12,7 @@ import { createUuid } from '@/utils';
 import { useLeaflet } from '@/core/L';
 import { Message } from '@/components/el/index';
 
-import '@/assets/font/iconfont.css';
+// import '@/assets/font/iconfont.css';
 
 import { mapProps, defaultOptions } from './map';
 

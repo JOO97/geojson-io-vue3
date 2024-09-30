@@ -5,7 +5,6 @@ import VueSetupExtend from 'vite-plugin-vue-setup-extend';
 import dts from 'vite-plugin-dts';
 import copyFiles from 'vite-plugin-copy-files';
 
-import { chunkSplitPlugin } from 'vite-plugin-chunk-split';
 import { visualizer } from 'rollup-plugin-visualizer';
 
 // https://vitejs.dev/config/
@@ -43,7 +42,6 @@ export default defineConfig({
 		},
 	},
 	build: {
-		// sourcemap: true,
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
 			name: 'geojson-io',
@@ -59,6 +57,10 @@ export default defineConfig({
 				},
 			},
 			treeshake: true,
+		},
+		watch: {
+			include: 'src/*',
+			skipWrite: true,
 		},
 	},
 	server: {

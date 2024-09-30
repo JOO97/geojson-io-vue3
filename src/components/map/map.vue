@@ -14,7 +14,18 @@ import { Message } from '@/components/el/index';
 
 // import '@/assets/font/iconfont.css';
 
+import polyline from './paths.json';
+
 import { mapProps, defaultOptions } from './map';
+
+const lines = polyline.map((item) => {
+	return item.geometry.coordinates.map((item2) => {
+		item2.pop();
+		return item2.reverse();
+	});
+});
+
+console.log(0, lines);
 
 interface IDynamicObj {
 	[key: string]: any;
@@ -112,6 +123,16 @@ const init = () => {
 	//右键点击线元素上的编辑点时触发
 	mapIns.on(L.Draw.Event.SPLIT, (payload: any) => splitPolyline(payload));
 	mapIns.on(L.Draw.Event.PolylineMarkerRemove, (payload: any) => removeMarkerOfPolyline(payload));
+
+	//#1
+	// const { antPath } = L.polyline;
+	// let paused = true;
+	// let path = antPath(lines, { paused });
+	// path.addTo(mapIns);
+	// mapIns.fitBounds(path.getBounds());
+	// path.resume();
+	// // setInterval(() => path.resume(), 1000);
+	// setInterval(() => path.pause(), 2000);
 };
 
 /**

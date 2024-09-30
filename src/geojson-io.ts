@@ -38,7 +38,7 @@ export const geojsonIoProps = {
 };
 
 /**
- * model hook
+ * Use model hook
  * @param props
  * @returns
  */

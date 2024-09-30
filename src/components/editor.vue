@@ -1,6 +1,5 @@
 <template>
 	<div id="editor" :class="{ 'is-error': errorContent }">
-		{{ errorInfo?.line }}
 		<!-- 错误提示 -->
 		<el-alert
 			v-if="errorContent"
@@ -13,7 +12,7 @@
 		<!-- 编辑器 -->
 		<Codemirror
 			ref="codemirrorRef"
-			v-model="value"
+			v-model="model"
 			v-bind="editorOptions"
 			:extensions="extensions"
 			@ready="handleReady"
@@ -30,6 +29,7 @@ import { linter, Diagnostic } from '@codemirror/lint';
 import { json } from '@codemirror/lang-json';
 import { Codemirror } from 'vue-codemirror';
 
+import { useVModel } from '@vueuse/core';
 import { debounce } from 'lodash-es';
 
 import { ElAlert } from '@/components/el';
@@ -43,9 +43,8 @@ const defaultData = `{
 `;
 
 const props = defineProps({
-	code: {
+	modelValue: {
 		type: String,
-		required: false,
 		default: `{
     "type": "FeatureCollection",
     "features": [
@@ -53,7 +52,9 @@ const props = defineProps({
 }`,
 	},
 });
-const $emit = defineEmits(['change']);
+const emit = defineEmits(['change', 'update:modelValue']);
+
+const model = useVModel(props, 'modelValue', emit);
 
 const cmView = shallowRef<EditorView>();
 
@@ -95,22 +96,6 @@ const extensions = [
 const codemirrorRef = ref<typeof Codemirror>();
 const errorInfo = ref<null | { message: string; line: number }>(null); //编辑器错误信息
 
-const value = computed({
-	get: () => {
-		let r = '';
-		try {
-			// 格式化
-			r = JSON.stringify(JSON.parse(props.code), null, 2);
-		} catch (error) {
-			r = props.code;
-		}
-		return r;
-	},
-	set: (value) => {
-		onChange(value);
-	},
-});
-
 const codemirror = computed(() => {
 	return codemirrorRef.value?.codemirror;
 });
@@ -130,11 +115,11 @@ let onChange: any = null;
  */
 const init = () => {
 	onChange = debounce((val: string) => {
-		if (!errorInfo) $emit('change', value);
+		// if (!errorInfo) emit('change', value);
 		// validateEditorValue(val, (err: any) => {
 		// 	errorInfo.value = err;
 		// 	if (!err) {
-		// 		$emit('change', value);
+		// 		emit('change', value);
 		// 	}
 		// });
 	}, 200);
@@ -232,7 +217,7 @@ function handleErrors(errors: any[], editor: any) {
  */
 const reset = () => {
 	// codemirror.value.doc.setValue(defaultData);
-	value.value = defaultData;
+	model.value = defaultData;
 };
 
 onMounted(() => nextTick(() => init()));

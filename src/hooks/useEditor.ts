@@ -13,7 +13,7 @@ export default (
 	//当前tab
 	const activeTab = ref('json');
 	//当前收展状态
-	const fold = ref(false);
+	const fold = ref(true);
 	// 错误处理中的数据
 	const errorGeojson = ref('');
 

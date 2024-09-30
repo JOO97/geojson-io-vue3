@@ -18,7 +18,7 @@
 			/>
 		</div>
 		<!-- 编辑器 -->
-		<div :span="8" :class="['geo-io-editor', 'right', { fold }]" v-if="editor">
+		<div :span="8" :class="['geo-io-editor', 'right', { fold }]" v-if="true">
 			<div class="geo-io-editor__content" v-show="!fold">
 				<el-tabs type="border-card" class="tab" v-model="activeTab" @tab-remove="handleTabRemove">
 					<el-tab-pane :padding="0" disabled>
@@ -63,15 +63,16 @@
 					</el-tab-pane>
 				</el-tabs>
 				<!-- 工具栏 -->
-				<!-- <FileBar @import="handleImport" @export="handleExport" /> -->
+				<FileBar @import="handleImport" @export="handleExport" />
 				<!-- 编辑器 -->
-				<!-- <Editor
+				<Editor
 					ref="editorRef"
 					:style="{ height }"
-					style="flex-grow: 1; overflow: auto"
 					:code="activeTab === 'json' ? model : errorGeojson"
+					v-model="model"
+					style="flex-grow: 1; overflow: auto"
 					class="editor"
-				/> -->
+				/>
 			</div>
 			<!-- 展开/收起 -->
 			<div class="geo-io-editor__toggle" :style="foldItemStyle" @click="toggleFold">
@@ -84,12 +85,13 @@
 </template>
 
 <script setup lang="ts" name="geojson-io">
-// import { saveAs } from 'file-saver';
+import { saveAs } from 'file-saver';
 
 import { geojsonValidate as validate } from '@/utils/validate';
 
 import Map from './components/map/map.vue';
-// import Editor from './components/editor.vue';
+import Editor from './components/editor.vue';
+import FileBar from './components/file-bar.vue';
 import {
 	MessageBox,
 	Message,
@@ -127,29 +129,29 @@ const {
 /**
  * 导入
  */
-// const handleImport = (value: string) => {
-// 	const { valid } = validate(value);
-// 	if (!valid) {
-// 		MessageBox('当前导入的数据存在格式错误，是否进行错误处理?', 'Warning')
-// 			.then(() => {
-// 				errorGeojson.value = value;
-// 				activeTab.value = 'geojsonValidate';
-// 			})
-// 			.catch(() => {
-// 				Message.info('取消导入');
-// 			});
-// 	} else handleMerge(value);
-// };
+const handleImport = (value: string) => {
+	const { valid } = validate(value);
+	if (!valid) {
+		MessageBox('当前导入的数据存在格式错误，是否进行错误处理?', 'Warning')
+			.then(() => {
+				errorGeojson.value = value;
+				activeTab.value = 'geojsonValidate';
+			})
+			.catch(() => {
+				Message.info('取消导入');
+			});
+	} else handleMerge(value);
+};
 
 /**
  * 导出
  */
-// const handleExport = () => {
-// 	var blob = new Blob([model.value], {
-// 		type: 'text/plain;charset=utf-8',
-// 	});
-// 	saveAs(blob, `geojson.json`);
-// };
+const handleExport = () => {
+	var blob = new Blob([model.value], {
+		type: 'text/plain;charset=utf-8',
+	});
+	saveAs(blob, `geojson.json`);
+};
 
 /**
  * 获取编辑器错误状态

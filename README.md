@@ -21,3 +21,7 @@ Please run 'build' not 'dev'.
 ```
 npm run build
 ```
+
+
+
+![image-20230907171410192](https://s2.loli.net/2023/09/07/Fi3IzV9JS2xwOQl.png)

@@ -6,6 +6,8 @@ import 'leaflet-distortableimage/dist/vendor';
 import 'leaflet-distortableimage';
 import 'leaflet-contextmenu/dist/leaflet.contextmenu.min.js';
 
+import 'leaflet-ant-path';
+
 /* Leaflet style */
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-draw/dist/leaflet.draw.css';
